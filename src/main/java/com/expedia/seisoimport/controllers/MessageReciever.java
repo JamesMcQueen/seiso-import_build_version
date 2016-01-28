@@ -18,13 +18,6 @@ public class MessageReciever
 	@Autowired
 	BuildVersionService buildVersionService;
 
-	// TODO: Figure out best way to show README.md
-	@RequestMapping(value = "/readme", method = RequestMethod.GET)
-	public String readme()
-	{
-		return "README.md is not set";
-	}
-
 	@RequestMapping(value = "/updateVersion", method = RequestMethod.POST)
 	public void updateVersion(@RequestBody String message)
 	{
