@@ -1,8 +1,10 @@
 /.classpath
 /.gradle
 /.idea
+/*.iml
 /.project
 /.settings
-/.DS_Store
+**/.DS_Store
 /bin
 /build
+/application.yml
