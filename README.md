@@ -1,3 +1,3 @@
 # seiso-import_build_version
 
-TODO
+Imports build versions into Seiso.
