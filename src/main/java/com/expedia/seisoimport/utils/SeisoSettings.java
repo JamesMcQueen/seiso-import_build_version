@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
  * Created: 1/28/16
  */
 @Component
-@ConfigurationProperties(prefix = "buildVersionSettings.seiso")
-public class BuildVersionSettings
+@ConfigurationProperties(prefix = "seisoSettings")
+public class SeisoSettings
 {
 	private String fields;
 	private String findByNameURL;
@@ -17,10 +17,9 @@ public class BuildVersionSettings
 	private String apiPassword;
 	private String logSuccessMsg;
 	private String logFailureMsg;
-	private String timeout;
 	private boolean isActive = false;
 
-	public BuildVersionSettings()
+	public SeisoSettings()
 	{
 		// no args constructor
 	}
@@ -87,16 +86,6 @@ public class BuildVersionSettings
 	public void setLogFailureMessage(String logFailureMsg)
 	{
 		this.logFailureMsg = logFailureMsg;
-	}
-
-	public String getTimeout()
-	{
-		return timeout;
-	}
-
-	public void setTimeout(String timeout)
-	{
-		this.timeout = timeout;
 	}
 
 	public boolean isActive()
