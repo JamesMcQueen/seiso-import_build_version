@@ -67,14 +67,14 @@ public class BuildVersionService implements UpdateService
 				}
 				else
 				{
-					LOGGER.log(logSettings.getAppLogLevel(), logSettings.getLogFailure(versionMessage.toString()));
+					LOGGER.log(logSettings.getAppLogLevel(), buildVersionSettings.getLogFailureMessage(versionMessage.toString()));
 				}
 			}
 		}
 
 		if(changed)
 		{
-			LOGGER.log(logSettings.getAppLogLevel(), logSettings.getLogSuccess());
+			LOGGER.log(logSettings.getAppLogLevel(), buildVersionSettings.getLogSuccessMessage());
 		}
 
 		return "Version Updated?: " + changed;
@@ -129,7 +129,7 @@ public class BuildVersionService implements UpdateService
 			catch(IOException e)
 			{
 				System.out.println(e);
-				LOGGER.log(logSettings.getAppLogLevel(), logSettings.getLogFailure(e.toString()));
+				LOGGER.log(logSettings.getAppLogLevel(), buildVersionSettings.getLogFailureMessage(e.toString()));
 			}
 		}
 		return null;
@@ -163,7 +163,7 @@ public class BuildVersionService implements UpdateService
 		httpPatch.addHeader("Content-Type", "application/json");
 
 		// We should be able to eliminate this when 401 issue is resolved.
-		httpPatch.addHeader(BasicScheme.authenticate(new UsernamePasswordCredentials(buildVersionSettings.getUsername(), buildVersionSettings.getPassword()), "UTF-8", false));
+		httpPatch.addHeader(BasicScheme.authenticate(new UsernamePasswordCredentials(buildVersionSettings.getApiUser(), buildVersionSettings.getApiPassword()), "UTF-8", false));
 
 		final JsonObject patchData = new JsonObject();
 		patchData.addProperty("buildVersion", version);

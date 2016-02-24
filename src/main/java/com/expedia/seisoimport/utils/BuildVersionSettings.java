@@ -1,38 +1,28 @@
 package com.expedia.seisoimport.utils;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.logging.LogLevel;
 import org.springframework.stereotype.Component;
-
-import java.util.logging.Level;
 
 /**
  * Author: James McQueen (jmcqueen@expedia.com)
  * Created: 1/28/16
  */
 @Component
-@ConfigurationProperties(prefix = "buildVersionSettings")
+@ConfigurationProperties(prefix = "buildVersionSettings.seiso")
 public class BuildVersionSettings
 {
-	private String findByNameURL;
 	private String fields;
+	private String findByNameURL;
+	private String apiUser;
+	private String apiPassword;
+	private String logSuccessMsg;
+	private String logFailureMsg;
+	private String timeout;
 	private boolean isActive = false;
-	private String username;
-	private String password;
 
 	public BuildVersionSettings()
 	{
 		// no args constructor
-	}
-
-	public String getFindByNameURL()
-	{
-		return findByNameURL;
-	}
-
-	public void setFindByNameURL(String findByNameURL)
-	{
-		this.findByNameURL = findByNameURL;
 	}
 
 	public String getFieldKey()
@@ -45,6 +35,70 @@ public class BuildVersionSettings
 		this.fields = fields;
 	}
 
+	public String getFindByNameURL()
+	{
+		return findByNameURL;
+	}
+
+	public void setFindByNameURL(String findByNameURL)
+	{
+		this.findByNameURL = findByNameURL;
+	}
+
+	public String getApiUser()
+	{
+		return apiUser;
+	}
+
+	public void setApiUser(String apiUser)
+	{
+		this.apiUser = apiUser;
+	}
+
+	public String getApiPassword()
+	{
+		return apiPassword;
+	}
+
+	public void setApiPassword(String apiPassword)
+	{
+		this.apiPassword = apiPassword;
+	}
+
+	public String getLogSuccessMessage()
+	{
+		return logSuccessMsg;
+	}
+
+	public void setLogSuccessMessage(String logSuccessMsg)
+	{
+		this.logSuccessMsg = logSuccessMsg;
+	}
+
+	public String getLogFailureMessage(String exception)
+	{
+		if(exception == null || exception.length() < 1)
+		{
+			return logFailureMsg;
+		}
+		return logFailureMsg + exception;
+	}
+
+	public void setLogFailureMessage(String logFailureMsg)
+	{
+		this.logFailureMsg = logFailureMsg;
+	}
+
+	public String getTimeout()
+	{
+		return timeout;
+	}
+
+	public void setTimeout(String timeout)
+	{
+		this.timeout = timeout;
+	}
+
 	public boolean isActive()
 	{
 		return isActive;
@@ -53,25 +107,5 @@ public class BuildVersionSettings
 	public void setActive(boolean isActive)
 	{
 		this.isActive = isActive;
-	}
-
-	public String getUsername()
-	{
-		return username;
-	}
-
-	public void setUsername(String username)
-	{
-		this.username = username;
-	}
-
-	public String getPassword()
-	{
-		return password;
-	}
-
-	public void setPassword(String password)
-	{
-		this.password = password;
 	}
 }
