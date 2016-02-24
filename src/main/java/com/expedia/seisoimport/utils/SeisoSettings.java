@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "seisoSettings")
 public class SeisoSettings
 {
-	private String fields;
 	private String findByNameURL;
 	private String apiUser;
 	private String apiPassword;
@@ -22,16 +21,6 @@ public class SeisoSettings
 	public SeisoSettings()
 	{
 		// no args constructor
-	}
-
-	public String getFieldKey()
-	{
-		return fields;
-	}
-
-	public void setFieldKey(String fields)
-	{
-		this.fields = fields;
 	}
 
 	public String getFindByNameURL()
