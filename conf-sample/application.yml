@@ -1,0 +1,22 @@
+# Spring Boot Specific Properties
+spring:
+    main:
+      web-environment: true
+      show-banner: true
+
+logging:
+    level:
+      com.expedia.seisoimport: INFO
+      org.springframework: INFO
+
+server:
+    port: 8080
+
+# Application Specific Properties
+seisoSettings:
+    findByNameURL: https://seiso-api.example.expedia.com/api/nodes/search/findByName?name=
+    apiUser: default
+    apiPassword: default
+    logSuccessMsg: Success
+    logFailureMsg: Failure
+    isActive: false

@@ -4,7 +4,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.logging.LogLevel;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
 import java.util.logging.Level;
 
 /**
@@ -17,8 +16,6 @@ public class LogSettings
 {
 	private Level appLogLevel = Level.INFO;
 	private LogLevel springLogLevel = LogLevel.INFO;
-	private String logSuccess;
-	private String logFailure;
 	private String logFile;
 
 	public LogSettings()
@@ -70,29 +67,5 @@ public class LogSettings
 				this.springLogLevel = converted;
 			}
 		}
-	}
-
-	public String getLogSuccess()
-	{
-		return logSuccess;
-	}
-
-	public void setLogSuccess(String logSuccess)
-	{
-		this.logSuccess = logSuccess;
-	}
-
-	public String getLogFailure(String exception)
-	{
-		if(exception == null || exception.length() < 1)
-		{
-			return logFailure;
-		}
-		return logFailure + exception;
-	}
-
-	public void setLogFailure(String logFailure)
-	{
-		this.logFailure = logFailure;
 	}
 }

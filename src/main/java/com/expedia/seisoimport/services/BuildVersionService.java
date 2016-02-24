@@ -1,7 +1,7 @@
 package com.expedia.seisoimport.services;
 
 import com.expedia.seisoimport.domain.VersionMessage;
-import com.expedia.seisoimport.utils.BuildVersionSettings;
+import com.expedia.seisoimport.utils.SeisoSettings;
 import com.expedia.seisoimport.utils.LogSettings;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -38,7 +38,7 @@ public class BuildVersionService implements UpdateService
 	private LogSettings logSettings;
 
 	@Autowired
-	private BuildVersionSettings buildVersionSettings;
+	private SeisoSettings seisoSettings;
 
 	private final static Logger LOGGER = Logger.getLogger(BuildVersionService.class.getName());
 
@@ -56,9 +56,9 @@ public class BuildVersionService implements UpdateService
 
 			LOGGER.log(Level.INFO, versionMessage.toString());
 
-			if(buildVersionSettings.isActive() && versionMessage != null && versionMessage.isValidMessage())
+			if(seisoSettings.isActive() && versionMessage != null && versionMessage.isValidMessage())
 			{
-				final String nodeId = getNodeId(buildVersionSettings.getFindByNameURL(), versionMessage.getNode());
+				final String nodeId = getNodeId(seisoSettings.getFindByNameURL(), versionMessage.getNode());
 
 				if(nodeId != null && nodeId.length() > 0)
 				{
@@ -67,14 +67,14 @@ public class BuildVersionService implements UpdateService
 				}
 				else
 				{
-					LOGGER.log(logSettings.getAppLogLevel(), logSettings.getLogFailure(versionMessage.toString()));
+					LOGGER.log(logSettings.getAppLogLevel(), seisoSettings.getLogFailureMessage(versionMessage.toString()));
 				}
 			}
 		}
 
 		if(changed)
 		{
-			LOGGER.log(logSettings.getAppLogLevel(), logSettings.getLogSuccess());
+			LOGGER.log(logSettings.getAppLogLevel(), seisoSettings.getLogSuccessMessage());
 		}
 
 		return "Version Updated?: " + changed;
@@ -129,7 +129,7 @@ public class BuildVersionService implements UpdateService
 			catch(IOException e)
 			{
 				System.out.println(e);
-				LOGGER.log(logSettings.getAppLogLevel(), logSettings.getLogFailure(e.toString()));
+				LOGGER.log(logSettings.getAppLogLevel(), seisoSettings.getLogFailureMessage(e.toString()));
 			}
 		}
 		return null;
@@ -163,7 +163,7 @@ public class BuildVersionService implements UpdateService
 		httpPatch.addHeader("Content-Type", "application/json");
 
 		// We should be able to eliminate this when 401 issue is resolved.
-		httpPatch.addHeader(BasicScheme.authenticate(new UsernamePasswordCredentials(buildVersionSettings.getUsername(), buildVersionSettings.getPassword()), "UTF-8", false));
+		httpPatch.addHeader(BasicScheme.authenticate(new UsernamePasswordCredentials(seisoSettings.getApiUser(), seisoSettings.getApiPassword()), "UTF-8", false));
 
 		final JsonObject patchData = new JsonObject();
 		patchData.addProperty("buildVersion", version);
