@@ -5,6 +5,8 @@ spring:
       show-banner: true
 
 logging:
+    file: /var/log/appName/appName.log
+
     level:
       com.expedia.seisoimport: INFO
       org.springframework: INFO
