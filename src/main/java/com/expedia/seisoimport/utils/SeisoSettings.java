@@ -53,17 +53,17 @@ public class SeisoSettings
 		this.apiPassword = apiPassword;
 	}
 
-	public String getLogSuccessMessage()
+	public String getLogSuccessMsg()
 	{
 		return logSuccessMsg;
 	}
 
-	public void setLogSuccessMessage(String logSuccessMsg)
+	public void setLogSuccessMsg(String logSuccessMsg)
 	{
 		this.logSuccessMsg = logSuccessMsg;
 	}
 
-	public String getLogFailureMessage(String exception)
+	public String getLogFailureMsg(String exception)
 	{
 		if(exception == null || exception.length() < 1)
 		{
@@ -72,7 +72,7 @@ public class SeisoSettings
 		return logFailureMsg + exception;
 	}
 
-	public void setLogFailureMessage(String logFailureMsg)
+	public void setLogFailureMsg(String logFailureMsg)
 	{
 		this.logFailureMsg = logFailureMsg;
 	}

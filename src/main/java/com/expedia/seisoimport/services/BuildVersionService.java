@@ -23,7 +23,6 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
@@ -50,13 +49,18 @@ public class BuildVersionService implements UpdateService
 
 		if(message != null)
 		{
-			//LOGGER.log(Level.INFO, "Received message: " + message);
+			LOGGER.info("Received: " + message);
 
 			VersionMessage versionMessage = getVersionMessage(message);
 
 			LOGGER.info(versionMessage.toString());
             LOGGER.info("Active: " + String.valueOf(seisoSettings.isActive()));
-            LOGGER.info("URL: " + seisoSettings.getFindByNameUrl());
+            LOGGER.info("FindByNameUrl: " + seisoSettings.getFindByNameUrl());
+            LOGGER.info("FailureMsg: " + seisoSettings.getLogFailureMsg("Test Failure Message"));
+            LOGGER.info("SuccessMsg: " + seisoSettings.getLogSuccessMsg());
+            LOGGER.info("" + seisoSettings.getApiUser());
+            LOGGER.info("" + seisoSettings.getApiPassword());
+            
 			if(versionMessage != null && versionMessage.isValidMessage())
 			{
 				final String nodeId = getNodeId(seisoSettings.getFindByNameUrl(), versionMessage.getNode());
@@ -78,7 +82,7 @@ public class BuildVersionService implements UpdateService
 
 		if(changed)
 		{
-			LOGGER.info(seisoSettings.getLogSuccessMessage());
+			LOGGER.info(seisoSettings.getLogSuccessMsg());
 		}
         LOGGER.info("Patched: " + changed);
 		return "Version Updated?: " + changed;
