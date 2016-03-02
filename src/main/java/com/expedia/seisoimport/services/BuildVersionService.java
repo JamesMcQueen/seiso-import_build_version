@@ -57,6 +57,7 @@ public class BuildVersionService implements UpdateService
 			LOGGER.log(Level.INFO, versionMessage.toString());
             LOGGER.log(Level.INFO, "checking for active");
             LOGGER.log(Level.INFO, String.valueOf(seisoSettings.isActive()));
+            LOGGER.log(Level.INFO, seisoSettings.getFindByNameURL());
 			if(seisoSettings.isActive() && versionMessage != null && versionMessage.isValidMessage())
 			{
 				final String nodeId = getNodeId(seisoSettings.getFindByNameURL(), versionMessage.getNode());
