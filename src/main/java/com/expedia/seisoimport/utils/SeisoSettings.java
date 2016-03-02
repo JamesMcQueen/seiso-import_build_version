@@ -16,7 +16,7 @@ public class SeisoSettings
 	private String apiPassword;
 	private String logSuccessMsg;
 	private String logFailureMsg;
-	private boolean isActive;
+	private String isActive;
 
 	public SeisoSettings()
 	{
@@ -79,10 +79,10 @@ public class SeisoSettings
 
 	public boolean isActive()
 	{
-		return isActive;
+		return Boolean.valueOf(isActive);
 	}
 
-	public void setActive(boolean isActive)
+	public void setActive(String isActive)
 	{
 		this.isActive = isActive;
 	}
