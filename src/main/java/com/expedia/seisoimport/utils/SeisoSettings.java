@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "seisoSettings")
 public class SeisoSettings
 {
-	private String findByNameURL;
+	private String findByNameUrl;
 	private String apiUser;
 	private String apiPassword;
 	private String logSuccessMsg;
@@ -23,14 +23,14 @@ public class SeisoSettings
 		// no args constructor
 	}
 
-	public String getFindByNameURL()
+	public String getFindByNameUrl()
 	{
-		return findByNameURL;
+		return findByNameUrl;
 	}
 
-	public void setFindByNameURL(String findByNameURL)
+	public void setFindByNameUrl(String findByNameUrl)
 	{
-		this.findByNameURL = findByNameURL;
+		this.findByNameUrl = findByNameUrl;
 	}
 
 	public String getApiUser()
@@ -77,12 +77,12 @@ public class SeisoSettings
 		this.logFailureMsg = logFailureMsg;
 	}
 
-	public Boolean isActive()
+	public boolean isActive()
 	{
 		return isActive;
 	}
 
-	public void setActive(Boolean isActive)
+	public void setActive(boolean isActive)
 	{
 		this.isActive = isActive;
 	}

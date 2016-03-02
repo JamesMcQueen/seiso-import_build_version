@@ -56,10 +56,10 @@ public class BuildVersionService implements UpdateService
 
 			LOGGER.log(Level.INFO, versionMessage.toString());
             LOGGER.log(Level.INFO, "Active: " + String.valueOf(seisoSettings.isActive()));
-            LOGGER.log(Level.INFO, "URL: " + seisoSettings.getFindByNameURL());
+            LOGGER.log(Level.INFO, "URL: " + seisoSettings.getFindByNameUrl());
 			if(versionMessage != null && versionMessage.isValidMessage())
 			{
-				final String nodeId = getNodeId(seisoSettings.getFindByNameURL(), versionMessage.getNode());
+				final String nodeId = getNodeId(seisoSettings.getFindByNameUrl(), versionMessage.getNode());
 
                 LOGGER.info("Node: " + nodeId);
 				if(nodeId != null && nodeId.length() > 0)
@@ -105,12 +105,15 @@ public class BuildVersionService implements UpdateService
 	 */
 	protected String getNodeId(String baseUrl, String nodeName)
 	{
+        LOGGER.log(Level.INFO, "retrieving node id: " + baseUrl + ", " + nodeName);
 		if(baseUrl.length() > 0 && nodeName.length() > 0)
 		{
 			final StringBuilder sb = new StringBuilder(baseUrl).append(nodeName);
 			final HttpGet httpGet = new HttpGet(sb.toString());
 			httpGet.addHeader("Accept", "*/*");
 			httpGet.addHeader("Accept-Encoding", "gzip");
+
+            LOGGER.log(Level.INFO, "httpGet: " + httpGet.toString());
 
 			try(final CloseableHttpClient client = HttpClients.createDefault())
 			{
