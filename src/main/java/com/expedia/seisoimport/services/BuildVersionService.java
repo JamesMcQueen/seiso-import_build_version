@@ -64,8 +64,8 @@ public class BuildVersionService implements UpdateService
                 LOGGER.info("Node: " + nodeId);
 				if(nodeId != null && nodeId.length() > 0)
 				{
-                    LOGGER.log(Level.INFO,"Attempt patch");
                     final String buildVersion = versionMessage.getBuildVersion();
+                    LOGGER.info("BuildVersion: " + buildVersion);
 					changed = updateVersion(getVersionPatch(nodeId, buildVersion));
 				}
 				else
@@ -163,11 +163,13 @@ public class BuildVersionService implements UpdateService
 
 	private HttpPatch getVersionPatch(String patchAPI, String version)
 	{
+        LOGGER.log(Level.INFO, "Patching");
 		final HttpPatch httpPatch = new HttpPatch(patchAPI);
 
 		httpPatch.addHeader("Accept", "*/*");
 		httpPatch.addHeader("Content-Type", "application/json");
 
+        LOGGER.info("username/password: " + seisoSettings.getApiUser() + seisoSettings.getApiPassword());
 		// We should be able to eliminate this when 401 issue is resolved.
 		httpPatch.addHeader(BasicScheme.authenticate(new UsernamePasswordCredentials(seisoSettings.getApiUser(), seisoSettings.getApiPassword()), "UTF-8", false));
 
