@@ -16,7 +16,7 @@ public class SeisoSettings
 	private String apiPassword;
 	private String logSuccessMsg;
 	private String logFailureMsg;
-	private Boolean isActive;
+	private boolean isActive;
 
 	public SeisoSettings()
 	{
