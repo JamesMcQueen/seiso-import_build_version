@@ -60,7 +60,7 @@ public class BuildVersionService implements UpdateService
             LOGGER.info("SuccessMsg: " + seisoSettings.getLogSuccessMsg());
             LOGGER.info("" + seisoSettings.getApiUser());
             LOGGER.info("" + seisoSettings.getApiPassword());
-            
+
 			if(versionMessage != null && versionMessage.isValidMessage())
 			{
 				final String nodeId = getNodeId(seisoSettings.getFindByNameUrl(), versionMessage.getNode());
@@ -75,7 +75,7 @@ public class BuildVersionService implements UpdateService
 				}
 				else
 				{
-					LOGGER.info(seisoSettings.getLogFailureMessage(versionMessage.toString()));
+					LOGGER.info(seisoSettings.getLogFailureMsg(versionMessage.toString()));
 				}
 			}
 		}
@@ -140,7 +140,7 @@ public class BuildVersionService implements UpdateService
 			catch(IOException e)
 			{
 				System.out.println(e);
-				LOGGER.log(logSettings.getAppLogLevel(), seisoSettings.getLogFailureMessage(e.toString()));
+				LOGGER.log(logSettings.getAppLogLevel(), seisoSettings.getLogFailureMsg(e.toString()));
 			}
 		}
 		return null;
