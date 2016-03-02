@@ -150,10 +150,12 @@ public class BuildVersionService implements UpdateService
 
 			try
 			{
+                LOGGER.info("patch: " + patch.toString());
 				response = httpClient.execute(patch);
 			}
 			catch(IOException e)
 			{
+                LOGGER.info("exception: " + e);
 				return false;
 			}
 			return response != null && response.getStatusLine().getStatusCode() == 200;
@@ -170,6 +172,7 @@ public class BuildVersionService implements UpdateService
 		httpPatch.addHeader("Content-Type", "application/json");
 
         LOGGER.info("username/password: " + seisoSettings.getApiUser() + seisoSettings.getApiPassword());
+        LOGGER.info("buildVersion: " + version);
 		// We should be able to eliminate this when 401 issue is resolved.
 		httpPatch.addHeader(BasicScheme.authenticate(new UsernamePasswordCredentials(seisoSettings.getApiUser(), seisoSettings.getApiPassword()), "UTF-8", false));
 
@@ -178,6 +181,8 @@ public class BuildVersionService implements UpdateService
 		final StringEntity entity = new StringEntity(patchData.toString(), "UTF-8");
 		entity.setContentType("application/json");
 		httpPatch.setEntity(entity);
+
+        LOGGER.info("httpPatch: " + httpPatch.toString());
 
 		return httpPatch;
 	}
