@@ -54,9 +54,9 @@ public class BuildVersionService implements UpdateService
 
 			VersionMessage versionMessage = getVersionMessage(message);
 
-			LOGGER.log(Level.INFO, versionMessage.toString());
-            LOGGER.log(Level.INFO, "Active: " + String.valueOf(seisoSettings.isActive()));
-            LOGGER.log(Level.INFO, "URL: " + seisoSettings.getFindByNameUrl());
+			LOGGER.info(versionMessage.toString());
+            LOGGER.info("Active: " + String.valueOf(seisoSettings.isActive()));
+            LOGGER.info("URL: " + seisoSettings.getFindByNameUrl());
 			if(versionMessage != null && versionMessage.isValidMessage())
 			{
 				final String nodeId = getNodeId(seisoSettings.getFindByNameUrl(), versionMessage.getNode());
@@ -67,19 +67,20 @@ public class BuildVersionService implements UpdateService
                     final String buildVersion = versionMessage.getBuildVersion();
                     LOGGER.info("BuildVersion: " + buildVersion);
 					changed = updateVersion(getVersionPatch(nodeId, buildVersion));
+                    LOGGER.info("changed: " + changed);
 				}
 				else
 				{
-					LOGGER.log(logSettings.getAppLogLevel(), seisoSettings.getLogFailureMessage(versionMessage.toString()));
+					LOGGER.info(seisoSettings.getLogFailureMessage(versionMessage.toString()));
 				}
 			}
 		}
 
 		if(changed)
 		{
-			LOGGER.log(logSettings.getAppLogLevel(), seisoSettings.getLogSuccessMessage());
+			LOGGER.info(seisoSettings.getLogSuccessMessage());
 		}
-        LOGGER.log(Level.INFO, "Patched" + changed);
+        LOGGER.info("Patched: " + changed);
 		return "Version Updated?: " + changed;
 	}
 
@@ -105,7 +106,7 @@ public class BuildVersionService implements UpdateService
 	 */
 	protected String getNodeId(String baseUrl, String nodeName)
 	{
-        LOGGER.log(Level.INFO, "retrieving node id: " + baseUrl + ", " + nodeName);
+        LOGGER.info("retrieving node id: " + baseUrl + ", " + nodeName);
 		if(baseUrl.length() > 0 && nodeName.length() > 0)
 		{
 			final StringBuilder sb = new StringBuilder(baseUrl).append(nodeName);
@@ -113,7 +114,7 @@ public class BuildVersionService implements UpdateService
 			httpGet.addHeader("Accept", "*/*");
 			httpGet.addHeader("Accept-Encoding", "gzip");
 
-            LOGGER.log(Level.INFO, "httpGet: " + httpGet.toString());
+            LOGGER.info("httpGet: " + httpGet.toString());
 
 			try(final CloseableHttpClient client = HttpClients.createDefault())
 			{
@@ -165,19 +166,19 @@ public class BuildVersionService implements UpdateService
 
 	private HttpPatch getVersionPatch(String patchAPI, String version)
 	{
-        LOGGER.log(Level.INFO, "Patching");
-		final HttpPatch httpPatch = new HttpPatch(patchAPI);
+        LOGGER.info("Patching");
+        LOGGER.info("username/password: " + seisoSettings.getApiUser() + seisoSettings.getApiPassword());
+        LOGGER.info("buildVersion: " + version);
 
+        final HttpPatch httpPatch = new HttpPatch(patchAPI);
 		httpPatch.addHeader("Accept", "*/*");
 		httpPatch.addHeader("Content-Type", "application/json");
 
-        LOGGER.info("username/password: " + seisoSettings.getApiUser() + seisoSettings.getApiPassword());
-        LOGGER.info("buildVersion: " + version);
 		// We should be able to eliminate this when 401 issue is resolved.
 		httpPatch.addHeader(BasicScheme.authenticate(new UsernamePasswordCredentials(seisoSettings.getApiUser(), seisoSettings.getApiPassword()), "UTF-8", false));
 
 		final JsonObject patchData = new JsonObject();
-		patchData.addProperty("buildVersion", version);
+        patchData.addProperty("buildVersion", version);
 		final StringEntity entity = new StringEntity(patchData.toString(), "UTF-8");
 		entity.setContentType("application/json");
 		httpPatch.setEntity(entity);
