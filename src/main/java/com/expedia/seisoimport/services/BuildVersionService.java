@@ -55,15 +55,13 @@ public class BuildVersionService implements UpdateService
 			VersionMessage versionMessage = getVersionMessage(message);
 
 			LOGGER.log(Level.INFO, versionMessage.toString());
-            LOGGER.log(Level.INFO, "checking for active");
-            LOGGER.log(Level.INFO, String.valueOf(seisoSettings.isActive()));
-            LOGGER.log(Level.INFO, seisoSettings.getFindByNameURL());
-			if(seisoSettings.isActive() && versionMessage != null && versionMessage.isValidMessage())
+            LOGGER.log(Level.INFO, "Active: " + String.valueOf(seisoSettings.isActive()));
+            LOGGER.log(Level.INFO, "URL: " + seisoSettings.getFindByNameURL());
+			if(versionMessage != null && versionMessage.isValidMessage())
 			{
 				final String nodeId = getNodeId(seisoSettings.getFindByNameURL(), versionMessage.getNode());
 
-                LOGGER.info("Everywhere");
-                LOGGER.log(Level.INFO,"nodeId:%s", nodeId);
+                LOGGER.info("Node: " + nodeId);
 				if(nodeId != null && nodeId.length() > 0)
 				{
                     LOGGER.log(Level.INFO,"Attempt patch");
