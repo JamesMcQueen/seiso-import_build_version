@@ -53,27 +53,22 @@ public class BuildVersionService implements UpdateService
 
 			VersionMessage versionMessage = getVersionMessage(message);
 
-			LOGGER.info(versionMessage.toString());
-            LOGGER.info("Active: " + String.valueOf(seisoSettings.isActive()));
+			LOGGER.info("VersionMessageObject: " + versionMessage.toString());
             LOGGER.info("FindByNameUrl: " + seisoSettings.getFindByNameUrl());
-            LOGGER.info("FailureMsg: " + seisoSettings.getLogFailureMsg("Test Failure Message"));
-            LOGGER.info("SuccessMsg: " + seisoSettings.getLogSuccessMsg());
-            LOGGER.info("" + seisoSettings.getApiUser());
-            LOGGER.info("" + seisoSettings.getApiPassword());
+            //LOGGER.info("" + seisoSettings.getApiUser());
+            //LOGGER.info("" + seisoSettings.getApiPassword());
+            //LOGGER.info("Active: " + String.valueOf(seisoSettings.isActive()));
 
 			if(versionMessage != null && versionMessage.isValidMessage())
 			{
 				final String nodeId = getNodeId(seisoSettings.getFindByNameUrl(), versionMessage.getNode());
 
-                LOGGER.info("Node: " + nodeId);
 				if(nodeId != null && nodeId.length() > 0)
 				{
                     final String buildVersion = versionMessage.getBuildVersion();
-                    LOGGER.info("BuildVersion: " + buildVersion);
 					changed = updateVersion(getVersionPatch(nodeId, buildVersion));
-                    LOGGER.info("changed: " + changed);
-				}
-				else
+                }
+                else
 				{
 					LOGGER.info(seisoSettings.getLogFailureMsg(versionMessage.toString()));
 				}
@@ -84,7 +79,6 @@ public class BuildVersionService implements UpdateService
 		{
 			LOGGER.info(seisoSettings.getLogSuccessMsg());
 		}
-        LOGGER.info("Patched: " + changed);
 		return "Version Updated?: " + changed;
 	}
 
@@ -110,7 +104,7 @@ public class BuildVersionService implements UpdateService
 	 */
 	protected String getNodeId(String baseUrl, String nodeName)
 	{
-        LOGGER.info("retrieving node id: " + baseUrl + ", " + nodeName);
+        LOGGER.info("Getting Node Id: " + baseUrl + ", " + nodeName);
 		if(baseUrl.length() > 0 && nodeName.length() > 0)
 		{
 			final StringBuilder sb = new StringBuilder(baseUrl).append(nodeName);
@@ -140,7 +134,7 @@ public class BuildVersionService implements UpdateService
 			catch(IOException e)
 			{
 				System.out.println(e);
-				LOGGER.log(logSettings.getAppLogLevel(), seisoSettings.getLogFailureMsg(e.toString()));
+                LOGGER.log(logSettings.getAppLogLevel(), seisoSettings.getLogFailureMsg(e.toString()));
 			}
 		}
 		return null;
@@ -160,7 +154,6 @@ public class BuildVersionService implements UpdateService
 			}
 			catch(IOException e)
 			{
-                LOGGER.info("exception: " + e);
 				return false;
 			}
 			return response != null && response.getStatusLine().getStatusCode() == 200;
@@ -170,9 +163,7 @@ public class BuildVersionService implements UpdateService
 
 	private HttpPatch getVersionPatch(String patchAPI, String version)
 	{
-        LOGGER.info("Patching");
-        LOGGER.info("username/password: " + seisoSettings.getApiUser() + seisoSettings.getApiPassword());
-        LOGGER.info("buildVersion: " + version);
+        LOGGER.info("Patching with buildVersion: " + version);
 
         final HttpPatch httpPatch = new HttpPatch(patchAPI);
 		httpPatch.addHeader("Accept", "*/*");

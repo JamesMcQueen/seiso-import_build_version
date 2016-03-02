@@ -79,7 +79,7 @@ public class SeisoSettings
 
 	public boolean isActive()
 	{
-		return Boolean.valueOf(isActive);
+		return Boolean.valueOf(isActive).booleanValue();
 	}
 
 	public void setActive(String isActive)
