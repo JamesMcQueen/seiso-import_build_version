@@ -55,14 +55,16 @@ public class BuildVersionService implements UpdateService
 			VersionMessage versionMessage = getVersionMessage(message);
 
 			LOGGER.log(Level.INFO, versionMessage.toString());
-
+            LOGGER.log(Level.INFO, String.format("Data notNull:%s, isValid%s", seisoSettings.isActive(), versionMessage.isValidMessage()));
 			if(seisoSettings.isActive() && versionMessage != null && versionMessage.isValidMessage())
 			{
 				final String nodeId = getNodeId(seisoSettings.getFindByNameURL(), versionMessage.getNode());
 
+                LOGGER.log(Level.INFO,"nodeId:%s", nodeId);
 				if(nodeId != null && nodeId.length() > 0)
 				{
-					final String buildVersion = versionMessage.getBuildVersion();
+                    LOGGER.log(Level.INFO,"Attempt patch");
+                    final String buildVersion = versionMessage.getBuildVersion();
 					changed = updateVersion(getVersionPatch(nodeId, buildVersion));
 				}
 				else
@@ -76,7 +78,7 @@ public class BuildVersionService implements UpdateService
 		{
 			LOGGER.log(logSettings.getAppLogLevel(), seisoSettings.getLogSuccessMessage());
 		}
-
+        LOGGER.log(Level.INFO, "Patched" + changed);
 		return "Version Updated?: " + changed;
 	}
 
