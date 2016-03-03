@@ -34,13 +34,9 @@ import java.util.logging.Logger;
 public class BuildVersionService implements UpdateService
 {
 	@Autowired
-	private LogSettings logSettings;
-
-	@Autowired
 	private SeisoSettings seisoSettings;
 
 	private final static Logger LOGGER = Logger.getLogger(BuildVersionService.class.getName());
-
 	private final static GsonJsonParser JSON_PARSER = new GsonJsonParser();
 
 	public String handleRequest(String message)
@@ -49,15 +45,10 @@ public class BuildVersionService implements UpdateService
 
 		if(message != null)
 		{
-			LOGGER.info("Received: " + message);
-
 			VersionMessage versionMessage = getVersionMessage(message);
 
 			LOGGER.info("VersionMessageObject: " + versionMessage.toString());
-            LOGGER.info("FindByNameUrl: " + seisoSettings.getFindByNameUrl());
-            //LOGGER.info("" + seisoSettings.getApiUser());
-            //LOGGER.info("" + seisoSettings.getApiPassword());
-            //LOGGER.info("Active: " + String.valueOf(seisoSettings.isActive()));
+            LOGGER.info("isActive: " + seisoSettings.isActive());
 
 			if(versionMessage != null && versionMessage.isValidMessage())
 			{
@@ -112,8 +103,6 @@ public class BuildVersionService implements UpdateService
 			httpGet.addHeader("Accept", "*/*");
 			httpGet.addHeader("Accept-Encoding", "gzip");
 
-            LOGGER.info("httpGet: " + httpGet.toString());
-
 			try(final CloseableHttpClient client = HttpClients.createDefault())
 			{
 				try(CloseableHttpResponse response = client.execute(httpGet))
@@ -134,7 +123,7 @@ public class BuildVersionService implements UpdateService
 			catch(IOException e)
 			{
 				System.out.println(e);
-                LOGGER.log(logSettings.getAppLogLevel(), seisoSettings.getLogFailureMsg(e.toString()));
+                LOGGER.info(seisoSettings.getLogFailureMsg(e.toString()));
 			}
 		}
 		return null;

@@ -1,6 +1,5 @@
 package com.expedia.seisoimport.utils;
 
-import com.expedia.seisoimport.domain.VersionMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.Test;
 
@@ -24,7 +23,7 @@ public class SeisoSettingsTest
     @Test
     public void getApiUserTest()
     {
-        assertEquals(seisoSettings.getApiUser(), "seiso-batch");
+        assertEquals(seisoSettings.getApiUser(), "default");
     }
 
     @Test
