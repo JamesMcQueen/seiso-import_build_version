@@ -35,7 +35,7 @@ public class SeisoSettingsTest
     @Test
     public void getIsActive()
     {
-        assertEquals(seisoSettings.isActive(), true);
+        assertEquals(seisoSettings.getEnabled(), true);
     }
 
 }

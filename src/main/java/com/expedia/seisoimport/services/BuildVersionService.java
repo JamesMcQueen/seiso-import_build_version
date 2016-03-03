@@ -2,7 +2,6 @@ package com.expedia.seisoimport.services;
 
 import com.expedia.seisoimport.domain.VersionMessage;
 import com.expedia.seisoimport.utils.SeisoSettings;
-import com.expedia.seisoimport.utils.LogSettings;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -48,7 +47,7 @@ public class BuildVersionService implements UpdateService
 			VersionMessage versionMessage = getVersionMessage(message);
 
 			LOGGER.info("VersionMessageObject: " + versionMessage.toString());
-            LOGGER.info("isActive: " + seisoSettings.isActive());
+            LOGGER.info("getEnabled: " + seisoSettings.getEnabled());
 
 			if(versionMessage != null && versionMessage.isValidMessage())
 			{
@@ -138,7 +137,6 @@ public class BuildVersionService implements UpdateService
 
 			try
 			{
-                LOGGER.info("patch: " + patch.toString());
 				response = httpClient.execute(patch);
 			}
 			catch(IOException e)
