@@ -27,8 +27,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.GsonJsonParser;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -76,7 +74,6 @@ public class BuildVersionService implements UpdateService
         }
     }
 
-    @Scheduled(cron="* /5 * * * ?")
     public void updateAPI()
     {
         // Get messages from queue as strings
@@ -163,7 +160,7 @@ public class BuildVersionService implements UpdateService
 					final HttpEntity entity = response.getEntity();
 
                     LOGGER.info("Entity: " + response.getEntity());
-                    
+
 					if(entity != null)
 					{
 						final JsonReader reader = new JsonReader(new InputStreamReader(entity.getContent()));
