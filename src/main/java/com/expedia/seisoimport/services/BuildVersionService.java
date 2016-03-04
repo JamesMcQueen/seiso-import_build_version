@@ -27,6 +27,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.GsonJsonParser;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -42,6 +43,7 @@ import java.util.logging.Logger;
  * Author: James McQueen (jmcqueen@expedia.com)
  * Created: 1/22/16
  */
+@EnableScheduling
 @Service("buildVersionService")
 public class BuildVersionService implements UpdateService
 {
