@@ -13,9 +13,12 @@ public class SeisoSettings
 {
 	private String findByNameUrl;
 	private String apiUser;
-	private String apiPassword;
-	private String logSuccessMsg;
-	private String logFailureMsg;
+    private String apiPassword;
+    private String versionQueueUrl;
+    private String awsSecretAccessId;
+    private String awsSecretAccessKey;
+    private String logSuccessMsg;
+    private String logFailureMsg;
 	private Boolean enabled;
 
 	public SeisoSettings()
@@ -53,7 +56,37 @@ public class SeisoSettings
 		this.apiPassword = apiPassword;
 	}
 
-	public String getLogSuccessMsg()
+    public String getVersionQueueUrl()
+    {
+        return versionQueueUrl;
+    }
+
+    public void setVersionQueueUrl(String versionQueueUrl)
+    {
+        this.versionQueueUrl = versionQueueUrl;
+    }
+
+    public String getAwsSecretAccessId()
+    {
+        return awsSecretAccessId;
+    }
+
+    public void setAwsSecretAccessId(String awsSecretAccessId)
+    {
+        this.awsSecretAccessId = awsSecretAccessId;
+    }
+
+    public String getAwsSecretAccessKey()
+    {
+        return awsSecretAccessKey;
+    }
+
+    public void setAwsSecretAccessKey(String awsSecretAccessKey)
+    {
+        this.awsSecretAccessKey = awsSecretAccessKey;
+    }
+
+    public String getLogSuccessMsg()
 	{
 		return logSuccessMsg;
 	}

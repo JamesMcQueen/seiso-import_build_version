@@ -2,6 +2,7 @@ package com.expedia.seisoimport.services;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.InstanceProfileCredentialsProvider;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.regions.Region;
@@ -50,7 +51,6 @@ public class BuildVersionService implements UpdateService
 
 	private final static Logger LOGGER = Logger.getLogger(BuildVersionService.class.getName());
 	private final static GsonJsonParser JSON_PARSER = new GsonJsonParser();
-    private static final String SQS_QUEUE_URL = "https://sqs.us-west-2.amazonaws.com/408096535527/minion-NodeNotificationChannelType-VersionChanged";
 
     private static AWSCredentials CREDENTIALS = null;
     private static AmazonSQS SQS = null;
@@ -72,7 +72,7 @@ public class BuildVersionService implements UpdateService
     {
         try
         {
-            CREDENTIALS = new InstanceProfileCredentialsProvider().getCredentials();
+            CREDENTIALS = new BasicAWSCredentials(seisoSettings.getAwsSecretAccessId(), seisoSettings.getAwsSecretAccessKey());
             SQS = new AmazonSQSClient(CREDENTIALS);
             Region usWest2 = Region.getRegion(Regions.US_WEST_2);
             SQS.setRegion(usWest2);
@@ -234,15 +234,15 @@ public class BuildVersionService implements UpdateService
             initialize();
         }
 
-        LOGGER.info("Receiving messages from: " + SQS_QUEUE_URL);
-        ReceiveMessageRequest receiveMessageRequest = new ReceiveMessageRequest(SQS_QUEUE_URL);
+        LOGGER.info("Receiving messages from: " + seisoSettings.getVersionQueueUrl());
+        ReceiveMessageRequest receiveMessageRequest = new ReceiveMessageRequest(seisoSettings.getVersionQueueUrl());
 
         List<String> messageList = new ArrayList<>();
 
         for(Message m: SQS.receiveMessage(receiveMessageRequest).getMessages())
         {
             messageList.add(m.getBody());
-            removeMessage(m, SQS_QUEUE_URL);
+            removeMessage(m, seisoSettings.getVersionQueueUrl());
         }
 
         LOGGER.info("message list size: " + messageList.size());
