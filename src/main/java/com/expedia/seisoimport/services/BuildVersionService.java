@@ -2,6 +2,7 @@ package com.expedia.seisoimport.services;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.InstanceProfileCredentialsProvider;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
@@ -55,11 +56,23 @@ public class BuildVersionService implements UpdateService
     private static AmazonSQS SQS = null;
 
 
+    public void updateAPI()
+    {
+        // Get messages from queue as strings
+        List<String> messages = retrieveSQSMessages();
+
+        // Update using handleMessage for each message
+        for(String message : messages)
+        {
+            handleMessage(message);
+        }
+    }
+
     private void initialize()
     {
         try
         {
-            CREDENTIALS = new ProfileCredentialsProvider().getCredentials();
+            CREDENTIALS = new InstanceProfileCredentialsProvider().getCredentials();
             SQS = new AmazonSQSClient(CREDENTIALS);
             Region usWest2 = Region.getRegion(Regions.US_WEST_2);
             SQS.setRegion(usWest2);
@@ -71,18 +84,6 @@ public class BuildVersionService implements UpdateService
                             "Please make sure that your CREDENTIALS file is at the correct " +
                             "location (~/.aws/CREDENTIALS), and is in valid format.",
                     e);
-        }
-    }
-
-    public void updateAPI()
-    {
-        // Get messages from queue as strings
-        List<String> messages = retrieveSQSMessages();
-
-        // Update using handleMessage for each message
-        for(String message : messages)
-        {
-            handleMessage(message);
         }
     }
 
