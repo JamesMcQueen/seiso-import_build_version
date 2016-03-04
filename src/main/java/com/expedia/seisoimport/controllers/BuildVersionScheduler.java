@@ -15,7 +15,7 @@ public class BuildVersionScheduler
     @Autowired
     BuildVersionService buildVersionService;
 
-    @Scheduled(cron = "* /1 * * * ?")
+    @Scheduled(cron = "0 * * * * MON-FRI")
     public void update()
     {
         buildVersionService.updateAPI();
