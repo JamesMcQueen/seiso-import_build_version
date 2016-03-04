@@ -77,7 +77,7 @@ public class BuildVersionService implements UpdateService
         }
     }
 
-    @Scheduled(cron="0 0/5 * * * ?")
+    @Scheduled(cron="* /5 * * * ?")
     public void updateAPI()
     {
         // Get messages from queue as strings
