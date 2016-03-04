@@ -21,6 +21,6 @@ public class MessageReciever
 	@RequestMapping(value = "/updateVersion", method = RequestMethod.POST)
 	public void updateVersion(@RequestBody String message)
 	{
-		buildVersionService.handleRequest(message);
+		//buildVersionService.handleRequest(message);
 	}
 }
