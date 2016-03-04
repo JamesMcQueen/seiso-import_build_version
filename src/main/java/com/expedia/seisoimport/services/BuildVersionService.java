@@ -106,6 +106,7 @@ public class BuildVersionService implements UpdateService
 
 				if(nodeId != null && nodeId.length() > 0)
 				{
+                    LOGGER.info("Node is valid getting the build version");
                     final String buildVersion = versionMessage.getBuildVersion();
 					changed = updateVersion(getVersionPatch(nodeId, buildVersion));
                 }
@@ -153,12 +154,16 @@ public class BuildVersionService implements UpdateService
 			httpGet.addHeader("Accept", "*/*");
 			httpGet.addHeader("Accept-Encoding", "gzip");
 
+            LOGGER.info("Attempting to create a closeable client");
 			try(final CloseableHttpClient client = HttpClients.createDefault())
 			{
-				try(CloseableHttpResponse response = client.execute(httpGet))
+                LOGGER.info("Attempting to generate response");
+                try(CloseableHttpResponse response = client.execute(httpGet))
 				{
 					final HttpEntity entity = response.getEntity();
 
+                    LOGGER.info("Entity: " + response.getEntity());
+                    
 					if(entity != null)
 					{
 						final JsonReader reader = new JsonReader(new InputStreamReader(entity.getContent()));
@@ -181,6 +186,7 @@ public class BuildVersionService implements UpdateService
 
 	private boolean updateVersion(final HttpPatch patch)
 	{
+        LOGGER.info("UPDATE VERSION");
 		if(patch != null)
 		{
 			final CloseableHttpClient httpClient = HttpClients.createDefault();
