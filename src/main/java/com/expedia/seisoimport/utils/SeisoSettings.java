@@ -1,7 +1,6 @@
 package com.expedia.seisoimport.utils;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 /**
@@ -9,7 +8,6 @@ import org.springframework.stereotype.Component;
  * Created: 1/28/16
  */
 @Component
-@EnableConfigurationProperties
 @ConfigurationProperties(prefix = "seisoSettings")
 public class SeisoSettings
 {
@@ -18,7 +16,7 @@ public class SeisoSettings
 	private String apiPassword;
 	private String logSuccessMsg;
 	private String logFailureMsg;
-	private boolean isActive;
+	private Boolean enabled;
 
 	public SeisoSettings()
 	{
@@ -79,13 +77,13 @@ public class SeisoSettings
 		this.logFailureMsg = logFailureMsg;
 	}
 
-	public boolean isActive()
+	public Boolean getEnabled()
 	{
-		return isActive;
+		return enabled;
 	}
 
-	public void setActive(boolean isActive)
+	public void setEnabled(Boolean enabled)
 	{
-		this.isActive = isActive;
+		this.enabled = enabled;
 	}
 }

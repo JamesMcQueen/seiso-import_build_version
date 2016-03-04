@@ -6,5 +6,5 @@ package com.expedia.seisoimport.services;
  */
 public interface UpdateService
 {
-	public String handleRequest(final String message);
+	public void updateAPI();
 }
