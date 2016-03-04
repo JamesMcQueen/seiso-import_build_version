@@ -43,7 +43,6 @@ import java.util.logging.Logger;
  * Author: James McQueen (jmcqueen@expedia.com)
  * Created: 1/22/16
  */
-@EnableScheduling
 @Service("buildVersionService")
 public class BuildVersionService implements UpdateService
 {
