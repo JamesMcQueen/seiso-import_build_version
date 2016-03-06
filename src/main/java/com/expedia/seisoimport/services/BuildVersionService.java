@@ -72,7 +72,7 @@ public class BuildVersionService implements UpdateService
     {
         try
         {
-            CREDENTIALS = new ProfileCredentialsProvider().getCredentials();
+            CREDENTIALS = new InstanceProfileCredentialsProvider().getCredentials();
             SQS = new AmazonSQSClient(CREDENTIALS);
             Region usWest2 = Region.getRegion(Regions.US_WEST_2);
             SQS.setRegion(usWest2);
