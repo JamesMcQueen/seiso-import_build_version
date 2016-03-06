@@ -187,15 +187,18 @@ public class BuildVersionService implements UpdateService
         LOGGER.info("UPDATE VERSION");
 		if(patch != null)
 		{
+            LOGGER.info("PATCH: " + patch)
 			final CloseableHttpClient httpClient = HttpClients.createDefault();
 			CloseableHttpResponse response = null;
 
 			try
 			{
 				response = httpClient.execute(patch);
+                LOGGER.info("response: " + response.toString());
 			}
 			catch(IOException e)
 			{
+                LOGGER.info("IOException: " + e.getStackTrace());
 				return false;
 			}
 			return response != null && response.getStatusLine().getStatusCode() == 200;
