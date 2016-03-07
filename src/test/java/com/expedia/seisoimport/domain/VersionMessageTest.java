@@ -3,6 +3,7 @@ package com.expedia.seisoimport.domain;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 
 /**
  * Author: James McQueen (jmcqueen@expedia.com)
@@ -19,18 +20,31 @@ public class VersionMessageTest
 		assertEquals(not_set, message.getBuildVersion());
 		assertEquals(not_set, message.getNode());
 		assertEquals(not_set, message.getServiceInstance());
+        assertEquals(false, message.isValidMessage());
 	}
 
 	@Test
 	public void getterTest()
 	{
-		final String node = "NODE";
-		final String si = "SI";
-		final String bv = "BV";
-		final VersionMessage message = new VersionMessage(si, node, bv);
-		assertEquals(node, message.getNode());
-		assertEquals(si, message.getServiceInstance());
-		assertEquals(bv, message.getBuildVersion());
-
+		VersionMessage message = createEmptyMessage();
+		assertEquals("NODE", message.getNode());
+		assertEquals("SI", message.getServiceInstance());
+		assertEquals("BV", message.getBuildVersion());
 	}
+
+    @Test
+    public void isValidOnEmptyTest()
+    {
+        VersionMessage message = createEmptyMessage();
+        assertFalse(message.isValidMessage());
+    }
+
+    private VersionMessage createEmptyMessage()
+    {
+        final String node = "NODE";
+        final String si = "SI";
+        final String bv = "BV";
+
+        return new VersionMessage(si, node, bv);
+    }
 }
