@@ -34,8 +34,8 @@ public class SQSRetriever
         }
 
         ReceiveMessageRequest receiveMessageRequest = new ReceiveMessageRequest(sqsUrl);
-        receiveMessageRequest.setMaxNumberOfMessages(20);
-        List<String> messageList = new ArrayList(20);
+        receiveMessageRequest.setMaxNumberOfMessages(10);
+        List<String> messageList = new ArrayList(10);
 
         for(Message m: SQS.receiveMessage(receiveMessageRequest).getMessages())
         {
@@ -54,9 +54,7 @@ public class SQSRetriever
         {
             CREDENTIALS = new InstanceProfileCredentialsProvider().getCredentials();
             SQS = new AmazonSQSClient(CREDENTIALS);
-            LOGGER.info(Regions.getCurrentRegion().toString());
-            Region usWest2 = Region.getRegion(Regions.US_WEST_2);
-            SQS.setRegion(usWest2);
+            SQS.setRegion(Regions.getCurrentRegion());
         }
         catch (Exception e)
         {
