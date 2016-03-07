@@ -11,7 +11,7 @@ BuildVersion data for Seiso should be continuously updated.
 3. The Seiso Build Version Updater uses a scheduled cron to poll the SQS VersionChanged queue at a specified rate.
 4. As the SQS Queue is polled verification and resolution is performed on the node id and message contents.
 5. If the update is valid the messages are removed from the SQS Queue and the Seiso API is updated via HTTP PATCH.
-6. The PATCH payload is a JSON Object in the form of {'buildVersion':'{<VERSION>}'}
+6. The PATCH payload is a JSON Object in the form of {'buildVersion':'VERSION'}
 
 ## Notes
 Using the SQS allows us to update securely, where previous attempts to use Lambda and HTTP Post Controller listening directly
