@@ -11,8 +11,7 @@ import static org.testng.Assert.assertEquals;
  */
 public class SeisoSettingsTest
 {
-    @Autowired
-    SeisoSettings seisoSettings;
+    SeisoSettings seisoSettings = new SeisoSettings();
 
     //@Test
     public void getFindByNameUrl()
@@ -35,7 +34,14 @@ public class SeisoSettingsTest
     //@Test
     public void getEnabled()
     {
-        //assertEquals(seisoSettings.getEnabled(), true);
+        assertEquals(seisoSettings.getEnabled(), Boolean.TRUE);
+    }
+
+    //@Test
+    public void getPatchSize()
+    {
+        //Integer patchSize = 3;
+        //assertEquals(seisoSettings.getPatchSize(), patchSize);
     }
 
 }

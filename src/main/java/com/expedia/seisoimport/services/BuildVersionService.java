@@ -67,11 +67,9 @@ public class BuildVersionService implements UpdateService
 		if(message != null)
 		{
 			VersionMessage versionMessage = getVersionMessage(message);
+			LOGGER.info("VersionMessage: " + versionMessage.toString());
 
-			LOGGER.info("VersionMessageObject: " + versionMessage.toString());
-            LOGGER.info("getEnabled: " + seisoSettings.getEnabled());
-
-			if(versionMessage != null && versionMessage.isValidMessage())
+			if(seisoSettings.getEnabled() && versionMessage != null && versionMessage.isValidMessage())
 			{
 				final String nodeId = getNodeId(seisoSettings.getFindByNameUrl(), versionMessage.getNode());
 
@@ -175,8 +173,8 @@ public class BuildVersionService implements UpdateService
 		httpPatch.addHeader("Accept", "*/*");
 		httpPatch.addHeader("Content-Type", "application/json");
 
-		// We should be able to eliminate this when 401 issue is resolved.
-		httpPatch.addHeader(BasicScheme.authenticate(new UsernamePasswordCredentials(seisoSettings.getApiUser(), seisoSettings.getApiPassword()), "UTF-8", false));
+		httpPatch.addHeader(BasicScheme.authenticate(new UsernamePasswordCredentials(
+                seisoSettings.getApiUser(), seisoSettings.getApiPassword()), "UTF-8", false));
 
 		final JsonObject patchData = new JsonObject();
         patchData.addProperty("buildVersion", version);
