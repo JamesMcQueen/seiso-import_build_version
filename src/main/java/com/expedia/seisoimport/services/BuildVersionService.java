@@ -13,6 +13,7 @@ import com.amazonaws.services.sqs.model.DeleteMessageRequest;
 import com.amazonaws.services.sqs.model.Message;
 import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 import com.expedia.seisoimport.domain.VersionMessage;
+import com.expedia.seisoimport.retrievers.SQSRetriever;
 import com.expedia.seisoimport.utils.SeisoSettings;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -51,40 +52,12 @@ public class BuildVersionService implements UpdateService
 
 	private final static Logger LOGGER = Logger.getLogger(BuildVersionService.class.getName());
 	private final static GsonJsonParser JSON_PARSER = new GsonJsonParser();
-
-    private static AWSCredentials CREDENTIALS = null;
-    private static AmazonSQS SQS = null;
-
+    private final static SQSRetriever buildVersionRetriever = new SQSRetriever();
 
     public void updateAPI()
     {
-        // Get messages from queue as strings
-        List<String> messages = retrieveSQSMessages();
-
-        // Update using handleMessage for each message
-        for(String message : messages)
-        {
-            handleMessage(message);
-        }
-    }
-
-    private void initialize()
-    {
-        try
-        {
-            CREDENTIALS = new InstanceProfileCredentialsProvider().getCredentials();
-            SQS = new AmazonSQSClient(CREDENTIALS);
-            Region usWest2 = Region.getRegion(Regions.US_WEST_2);
-            SQS.setRegion(usWest2);
-        }
-        catch (Exception e)
-        {
-            throw new AmazonClientException(
-                    "Cannot load the CREDENTIALS from the credential profiles file. " +
-                            "Please make sure that your CREDENTIALS file is at the correct " +
-                            "location (~/.aws/CREDENTIALS), and is in valid format.",
-                    e);
-        }
+        buildVersionRetriever.retrieveSQSMessages(seisoSettings.getVersionQueueUrl(), seisoSettings.getPatchSize())
+                .forEach(this::handleMessage);
     }
 
 	private String handleMessage(String message)
@@ -104,13 +77,12 @@ public class BuildVersionService implements UpdateService
 
 				if(nodeId != null && nodeId.length() > 0)
 				{
-                    LOGGER.info("Node is valid getting the build version");
                     final String buildVersion = versionMessage.getBuildVersion();
 					changed = updateVersion(getVersionPatch(nodeId, buildVersion));
                 }
                 else
 				{
-					LOGGER.info(seisoSettings.getLogFailureMsg(versionMessage.toString()));
+					LOGGER.warning(seisoSettings.getLogFailureMsg(versionMessage.toString()));
 				}
 			}
 		}
@@ -131,74 +103,23 @@ public class BuildVersionService implements UpdateService
 			searchMap = JSON_PARSER.parseMap(searchMap.get("Fields").toString());
 			return new GsonBuilder().create().fromJson(searchMap.toString(), VersionMessage.class);
 		}
-
-		return null;
-	}
-
-	/**
-	 * Retrieves a Seiso Node's Id given an endpoint and the name of a node.
-	 *
-	 * @param baseUrl  the endpoint
-	 * @param nodeName the name of the node
-	 * @return a valid id or null on failure.
-	 */
-	private String getNodeId(String baseUrl, String nodeName)
-	{
-        LOGGER.info("Getting Node Id: " + baseUrl + ", " + nodeName);
-		if(baseUrl.length() > 0 && nodeName.length() > 0)
-		{
-			final StringBuilder sb = new StringBuilder(baseUrl).append(nodeName);
-			final HttpGet httpGet = new HttpGet(sb.toString());
-			httpGet.addHeader("Accept", "*/*");
-			httpGet.addHeader("Accept-Encoding", "gzip");
-
-            LOGGER.info("Attempting to create a closeable client");
-			try(final CloseableHttpClient client = HttpClients.createDefault())
-			{
-                LOGGER.info("Attempting to generate response");
-                try(CloseableHttpResponse response = client.execute(httpGet))
-				{
-					final HttpEntity entity = response.getEntity();
-
-                    LOGGER.info("Entity: " + response.getEntity());
-
-					if(entity != null)
-					{
-						final JsonReader reader = new JsonReader(new InputStreamReader(entity.getContent()));
-
-						return new JsonParser().parse(reader).getAsJsonObject()
-								.get("_links").getAsJsonObject()
-								.get("self").getAsJsonObject()
-								.get("href").getAsString();
-					}
-				}
-			}
-			catch(IOException e)
-			{
-				System.out.println(e);
-                LOGGER.info(seisoSettings.getLogFailureMsg(e.toString()));
-			}
-		}
 		return null;
 	}
 
 	private boolean updateVersion(final HttpPatch patch)
 	{
-        LOGGER.info("UPDATE VERSION");
 		if(patch != null)
 		{
-            LOGGER.info("PATCH: " + patch);
 			final CloseableHttpClient httpClient = HttpClients.createDefault();
-			CloseableHttpResponse response = null;
+			CloseableHttpResponse response;
 
 			try
 			{
 				response = httpClient.execute(patch);
-                LOGGER.info("response: " + response.toString());
 			}
 			catch(IOException e)
 			{
-                LOGGER.info("IOException: " + e.getStackTrace());
+                LOGGER.warning(seisoSettings.getLogFailureMsg(e.getStackTrace().toString()));
 				return false;
 			}
 			return response != null && response.getStatusLine().getStatusCode() == 200;
@@ -206,10 +127,50 @@ public class BuildVersionService implements UpdateService
 		return false;
 	}
 
+    /**
+     * Retrieves a Seiso Node's Id given an endpoint and the name of a node.
+     *
+     * @param baseUrl  the endpoint
+     * @param nodeName the name of the node
+     * @return a valid id or null on failure.
+     */
+    private String getNodeId(String baseUrl, String nodeName)
+    {
+        LOGGER.info("Retrieve nodeId: " + baseUrl + nodeName);
+        if(baseUrl.length() > 0 && nodeName.length() > 0)
+        {
+            final StringBuilder sb = new StringBuilder(baseUrl).append(nodeName);
+            final HttpGet httpGet = new HttpGet(sb.toString());
+            httpGet.addHeader("Accept", "*/*");
+            httpGet.addHeader("Accept-Encoding", "gzip");
+
+            try(final CloseableHttpClient client = HttpClients.createDefault())
+            {
+                try(CloseableHttpResponse response = client.execute(httpGet))
+                {
+                    final HttpEntity entity = response.getEntity();
+
+                    if(entity != null)
+                    {
+                        final JsonReader reader = new JsonReader(new InputStreamReader(entity.getContent()));
+
+                        return new JsonParser().parse(reader).getAsJsonObject()
+                                .get("_links").getAsJsonObject()
+                                .get("self").getAsJsonObject()
+                                .get("href").getAsString();
+                    }
+                }
+            }
+            catch(IOException e)
+            {
+                LOGGER.warning(seisoSettings.getLogFailureMsg(e.toString()));
+            }
+        }
+        return null;
+    }
+
 	private HttpPatch getVersionPatch(String patchAPI, String version)
 	{
-        LOGGER.info("Patching with buildVersion: " + version);
-
         final HttpPatch httpPatch = new HttpPatch(patchAPI);
 		httpPatch.addHeader("Accept", "*/*");
 		httpPatch.addHeader("Content-Type", "application/json");
@@ -227,38 +188,4 @@ public class BuildVersionService implements UpdateService
 
 		return httpPatch;
 	}
-
-    public List<String> retrieveSQSMessages()
-    {
-        // String queueUrl = seisoSettings.getQueueUrl;
-
-        if(CREDENTIALS == null)
-        {
-            initialize();
-        }
-
-        LOGGER.info("Receiving messages from: " + seisoSettings.getVersionQueueUrl());
-        ReceiveMessageRequest receiveMessageRequest = new ReceiveMessageRequest(seisoSettings.getVersionQueueUrl());
-
-        List<String> messageList = new ArrayList<>();
-
-        for(Message m: SQS.receiveMessage(receiveMessageRequest).getMessages())
-        {
-            messageList.add(m.getBody());
-            removeMessage(m, seisoSettings.getVersionQueueUrl());
-        }
-
-        LOGGER.info("message list size: " + messageList.size());
-
-        return messageList;
-    }
-
-    public void removeMessage(final Message message, String queueUrl)
-    {
-        // Delete a message
-        LOGGER.info("Deleting a message.");
-        String messageReceiptHandle = message.getReceiptHandle();
-        SQS.deleteMessage(new DeleteMessageRequest().withQueueUrl(queueUrl).withReceiptHandle(messageReceiptHandle));
-
-    }
 }
