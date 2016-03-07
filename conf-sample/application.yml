@@ -16,9 +16,11 @@ server:
 
 # Application Specific Properties
 seisoSettings:
-    findByNameURL: https://seiso-api.example.expedia.com/api/nodes/search/findByName?name=
+    findByNameUrl: https://seiso-api.example.expedia.com/api/nodes/search/findByName?name=
     apiUser: default
     apiPassword: default
+    versionQueueUrl: https://sqs.<REGION>.amazonaws.com/<ID>/TOPIC
     logSuccessMsg: Success
     logFailureMsg: Failure
-    isActive: false
+    enabled: true
+    patchSize: 3
