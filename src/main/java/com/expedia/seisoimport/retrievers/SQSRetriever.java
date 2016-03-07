@@ -34,8 +34,8 @@ public class SQSRetriever
         }
 
         ReceiveMessageRequest receiveMessageRequest = new ReceiveMessageRequest(sqsUrl);
-        receiveMessageRequest.setMaxNumberOfMessages(10);
-        List<String> messageList = new ArrayList(10);
+        receiveMessageRequest.setMaxNumberOfMessages(chunkSize);
+        List<String> messageList = new ArrayList(chunkSize);
 
         for(Message m: SQS.receiveMessage(receiveMessageRequest).getMessages())
         {
