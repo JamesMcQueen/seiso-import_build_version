@@ -22,17 +22,12 @@ import java.util.logging.Logger;
 public class SQSRetriever
 {
     private final static Logger LOGGER = Logger.getLogger(SQSRetriever.class.getName());
-    private static AWSCredentials CREDENTIALS = null;
-    private static AmazonSQS SQS = null;
+    private static AmazonSQS SQS = new AmazonSQSClient();
 
 
     public List<String> retrieveSQSMessages(String sqsUrl, Integer chunkSize)
     {
-        if(CREDENTIALS == null)
-        {
-            initialize();
-        }
-
+        SQS.setRegion(Regions.getCurrentRegion());
         ReceiveMessageRequest receiveMessageRequest = new ReceiveMessageRequest(sqsUrl);
         receiveMessageRequest.setMaxNumberOfMessages(chunkSize);
         List<String> messageList = new ArrayList(chunkSize);
@@ -46,23 +41,6 @@ public class SQSRetriever
         LOGGER.info("Message Count: " + messageList.size());
 
         return messageList;
-    }
-
-    private void initialize()
-    {
-        try
-        {
-            CREDENTIALS = new InstanceProfileCredentialsProvider().getCredentials();
-            SQS = new AmazonSQSClient(CREDENTIALS);
-            SQS.setRegion(Regions.getCurrentRegion());
-        }
-        catch (Exception e)
-        {
-            throw new AmazonClientException(
-                    "Cannot load the CREDENTIALS from the credential profiles file. " +
-                            "Please make sure that your CREDENTIALS file is at the correct " +
-                            "location (~/.aws/CREDENTIALS), and is in valid format.", e);
-        }
     }
 
     private void removeMessage(final Message message, String queueUrl)
