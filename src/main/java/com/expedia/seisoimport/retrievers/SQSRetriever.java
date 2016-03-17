@@ -1,9 +1,5 @@
 package com.expedia.seisoimport.retrievers;
 
-import com.amazonaws.AmazonClientException;
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.InstanceProfileCredentialsProvider;
-import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClient;
@@ -25,12 +21,12 @@ public class SQSRetriever
     private static AmazonSQS SQS = new AmazonSQSClient();
 
 
-    public List<String> retrieveSQSMessages(String sqsUrl, Integer chunkSize)
+    public List<String> retrieveSQSMessages(String sqsUrl, Integer batchSize)
     {
         SQS.setRegion(Regions.getCurrentRegion());
         ReceiveMessageRequest receiveMessageRequest = new ReceiveMessageRequest(sqsUrl);
-        receiveMessageRequest.setMaxNumberOfMessages(chunkSize);
-        List<String> messageList = new ArrayList(chunkSize);
+        receiveMessageRequest.setMaxNumberOfMessages(batchSize);
+        List<String> messageList = new ArrayList(batchSize);
 
         for(Message m: SQS.receiveMessage(receiveMessageRequest).getMessages())
         {
