@@ -41,7 +41,7 @@ public class SeisoSettingsTest
     public void getPatchSize()
     {
         //Integer patchSize = 3;
-        //assertEquals(seisoSettings.getPatchSize(), patchSize);
+        //assertEquals(seisoSettings.getBatchSize(), patchSize);
     }
 
 }

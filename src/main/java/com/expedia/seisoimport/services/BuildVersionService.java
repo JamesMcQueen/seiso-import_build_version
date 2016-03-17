@@ -1,17 +1,5 @@
 package com.expedia.seisoimport.services;
 
-import com.amazonaws.AmazonClientException;
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.auth.InstanceProfileCredentialsProvider;
-import com.amazonaws.auth.profile.ProfileCredentialsProvider;
-import com.amazonaws.regions.Region;
-import com.amazonaws.regions.Regions;
-import com.amazonaws.services.sqs.AmazonSQS;
-import com.amazonaws.services.sqs.AmazonSQSClient;
-import com.amazonaws.services.sqs.model.DeleteMessageRequest;
-import com.amazonaws.services.sqs.model.Message;
-import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 import com.expedia.seisoimport.domain.VersionMessage;
 import com.expedia.seisoimport.retrievers.SQSRetriever;
 import com.expedia.seisoimport.utils.SeisoSettings;
@@ -34,7 +22,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -56,8 +43,14 @@ public class BuildVersionService implements UpdateService
 
     public void updateAPI()
     {
-        buildVersionRetriever.retrieveSQSMessages(seisoSettings.getVersionQueueUrl(), seisoSettings.getPatchSize())
-                .forEach(this::handleMessage);
+        boolean isDone = false;
+
+        while(!isDone)
+        {
+            List<String> messages = buildVersionRetriever.retrieveSQSMessages(seisoSettings.getVersionQueueUrl(), seisoSettings.getBatchSize());
+            messages.forEach(this::handleMessage);
+            isDone = messages.size() == 0;
+        }
     }
 
 	private String handleMessage(String message)

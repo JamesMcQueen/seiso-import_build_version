@@ -20,7 +20,7 @@ public class SeisoSettings
     private String logSuccessMsg;
     private String logFailureMsg;
 	private Boolean enabled;
-    private Integer patchSize = 1;
+    private Integer batchSize = 1;
 
 	public SeisoSettings()
 	{
@@ -121,13 +121,13 @@ public class SeisoSettings
 		this.enabled = enabled;
 	}
 
-    public Integer getPatchSize()
+    public Integer getBatchSize()
     {
-        return patchSize;
+        return batchSize;
     }
 
-    public void setPatchSize(Integer patchSize)
+    public void setBatchSize(Integer batchSize)
     {
-        this.patchSize = patchSize;
+        this.batchSize = batchSize;
     }
 }
