@@ -49,7 +49,7 @@ public class BuildVersionService implements UpdateService
         {
             List<String> messages = buildVersionRetriever.retrieveSQSMessages(seisoSettings.getVersionQueueUrl(), seisoSettings.getBatchSize());
             messages.forEach(this::handleMessage);
-            isDone = messages.size() == 0;
+            isDone = messages.size() < seisoSettings.getBatchSize();
         }
     }
 
